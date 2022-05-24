@@ -12,7 +12,7 @@ def input_error(func):
         name, phone = args
         try:
             phone_check = phone[1:] if phone[0] == '+' else phone
-            # check at once if the number is negative and if it is not a string
+            # check at once if the phone doesn't start with '-' and if it contains only digits
             if int(phone_check) < 0:
                 raise ValueError
         except ValueError:
@@ -29,7 +29,6 @@ def input_error(func):
 # This decorator handles the correct number of arguments that are passed into the function
 def func_arg_error(func):
     def wrapper(*args):
-
         try:
             func(*args)
         except TypeError:
