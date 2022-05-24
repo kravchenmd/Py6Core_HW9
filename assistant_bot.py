@@ -12,7 +12,8 @@ def input_error(func):
         name, phone = args
         try:
             phone_check = phone[1:] if phone[0] == '+' else phone
-            # check at once if the phone doesn't start with '-' and if it contains only digits
+            # check at once if the phone number doesn't start with '-' sign
+            # and if it contains only digits by int()
             if int(phone_check) < 0:
                 raise ValueError
         except ValueError:
