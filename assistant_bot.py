@@ -7,24 +7,8 @@ def func_decorator(func):
         print(args)
         try:
             func(*args)
-            return
         except Exception as e:
             print(f"ERROR: {e}")
-            return
-        # if len(args) > 1:
-        #     try:
-        #         func(*args[1:])
-        #         return
-        #     except Exception as e:
-        #         print(e)
-        #         return
-
-        # for functions without args: show() and hello()
-        # try:
-        #     func()
-        #     return
-        # except Exception as e:
-        #     print(f"ERROR: {e}")
 
     return wrapper
 
@@ -102,15 +86,9 @@ while True:
 
     if func:
         # to take into account
-        func(*command[1:]) if len(command)>1 else func() # else part to take into account hello() and show()
-        # if len(command) > 1:
-        #     func(*command)
-        # else
+        func(*command[1:]) if len(command) > 1 else func()  # else part to take into account hello() and show()
 
     if command in exit_commands:
         break
     # print(contacts)
     print()
-
-
-
