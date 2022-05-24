@@ -4,6 +4,7 @@ contacts = {}
 
 def input_error(func):
     def wrapper(*args):
+        # Handles only the correct number of arguments that are passed into the function
         try:
             func(*args)
         except TypeError:
