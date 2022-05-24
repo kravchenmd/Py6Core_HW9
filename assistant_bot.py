@@ -2,23 +2,28 @@ exit_commands = ('good_bye', 'close', 'exit')
 contacts = {}
 
 
-def func_decorator(func):
+def input_error(func):
     def wrapper(*args):
-        print(args)
         try:
             func(*args)
-        except Exception as e:
-            print(f"ERROR: {e}")
+        except TypeError:
+            f_name = func.__name__
+            if f_name in ('hello', 'show_all_phones'):
+                print("ERROR: This command has to be written without arguments!")
+            if f_name in ('add_phone', 'change_phone'):
+                print("ERROR: This command needs 2 arguments: 'name' and 'phone'!")
+            if f_name == 'show_phone':
+                print("ERROR: This command needs 1 arguments: 'name'!")
 
     return wrapper
 
 
-@func_decorator
+@input_error
 def hello() -> None:
     print("Hello! How can I help you?")
 
 
-@func_decorator
+@input_error
 def add_phone(name: str, phone: str) -> None:
     if name in contacts.keys():
         print(f"Name '{name}' is already in contacts!")
@@ -29,8 +34,8 @@ def add_phone(name: str, phone: str) -> None:
     print(f'Contact was added successfully!')
 
 
-@func_decorator
-def change_phone(name: str, phone: str) -> bool:
+@input_error
+def change_phone(name: str, phone: str):
     if name not in contacts.keys():
         print(f"There is no contact with name {name}")
         return
@@ -39,7 +44,7 @@ def change_phone(name: str, phone: str) -> bool:
     print(f'Contact was updated successfully!')
 
 
-@func_decorator
+@input_error
 def show_phone(name: str) -> None:
     if name not in contacts.keys():
         print(f"There is no contact with name {name}")
@@ -48,10 +53,10 @@ def show_phone(name: str) -> None:
     print(contacts.get(name))
 
 
-@func_decorator
+@input_error
 def show_all_phones() -> None:
     if not contacts:
-        print("There are no contacts yet to show...")
+        print("There are no contacts to show yet...")
         return
 
     for name, phone in contacts.items():
@@ -59,36 +64,43 @@ def show_all_phones() -> None:
 
 
 # @func_decorator
-def choose_command(command: str):
-    if command == 'hello':
+def choose_command(cmd: str):
+    if cmd == 'hello':
         return hello
-    if command == 'add':
+    if cmd == 'add':
         return add_phone
-    if command == 'change':
+    if cmd == 'change':
         return change_phone
-    if command == 'phone':
+    if cmd == 'phone':
         return show_phone
-    if command == 'show':
+    if cmd == 'show':
         return show_all_phones
     else:
         print('Unknown command')
         return None
 
 
-while True:
-    command = None
-    # Check if command is not empty
-    while not command:
-        command = input('Enter command: ')
-
-    command = command.strip().split(' ')  # apply strip() as well to exclude spaces at the ends
-    func = choose_command(command[0].lower())
-
+def handle_command(cmd: str):
+    cmd = cmd.strip().split(' ')  # apply strip() as well to exclude spaces at the ends
+    func = choose_command(cmd[0].lower())
     if func:
-        # to take into account
-        func(*command[1:]) if len(command) > 1 else func()  # else part to take into account hello() and show()
+        func(*cmd[1:]) if len(cmd) > 1 else func()  # else part to take into account hello() and show()
 
-    if command in exit_commands:
-        break
-    # print(contacts)
-    print()
+
+def main():
+    while True:
+        command = None
+
+        # Check if command is not empty
+        while not command:
+            command = input('Enter command: ')
+
+        if command in exit_commands:
+            break
+
+        handle_command(command)
+        print()
+
+
+if __name__ == '__main__':
+    main()
