@@ -1,4 +1,4 @@
-exit_commands = ('good_bye', 'close', 'exit')
+exit_commands = ('good bye', 'close', 'exit')
 contacts = {}
 
 
@@ -64,25 +64,31 @@ def show_all_phones() -> None:
 
 
 # @func_decorator
-def choose_command(cmd: str):
-    if cmd == 'hello':
+def choose_command(cmd: list):
+
+    cmd_check = cmd[0].lower()
+    if cmd_check == 'hello':
         return hello
-    if cmd == 'add':
+    if cmd_check == 'add':
         return add_phone
-    if cmd == 'change':
+    if cmd_check == 'change':
         return change_phone
-    if cmd == 'phone':
+    if cmd_check == 'phone':
         return show_phone
-    if cmd == 'show':
-        return show_all_phones
-    else:
-        print('Unknown command')
-        return None
+    if cmd_check == 'show':
+        # take into account that this command consists 2 words
+        cmd[:2] = [' '.join(cmd[:2])]
+        cmd_check = cmd[0].lower()
+        if cmd_check == 'show all':
+            return show_all_phones
+
+    print('Unknown command')
+    return None
 
 
 def handle_command(cmd: str):
     cmd = cmd.strip().split(' ')  # apply strip() as well to exclude spaces at the ends
-    func = choose_command(cmd[0].lower())
+    func = choose_command(cmd)
     if func:
         func(*cmd[1:]) if len(cmd) > 1 else func()  # else part to take into account hello() and show()
 
@@ -96,6 +102,7 @@ def main():
             command = input('Enter command: ')
 
         if command in exit_commands:
+            print("Good bye!")
             break
 
         handle_command(command)
