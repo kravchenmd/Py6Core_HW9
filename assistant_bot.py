@@ -38,7 +38,7 @@ def add_phone(name: str, phone: str) -> None:
 @input_error
 def change_phone(name: str, phone: str):
     if name not in contacts.keys():
-        print(f"There is no contact with name {name}")
+        print(f"There is no contact with name '{name}'")
         return
 
     contacts.update({name: phone})
@@ -48,7 +48,7 @@ def change_phone(name: str, phone: str):
 @input_error
 def show_phone(name: str) -> None:
     if name not in contacts.keys():
-        print(f"There is no contact with name {name}")
+        print(f"There is no contact with name '{name}'")
         return
 
     print(contacts.get(name))
@@ -64,10 +64,9 @@ def show_all_phones() -> None:
         print(name, phone)
 
 
-# @func_decorator
 def choose_command(cmd: list):
-
     cmd_check = cmd[0].lower()
+
     if cmd_check == 'hello':
         return hello
     if cmd_check == 'add':
