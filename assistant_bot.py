@@ -2,9 +2,34 @@ exit_commands = ('good bye', 'close', 'exit')
 contacts = {}
 
 
+# This decorator handles correctness of the phone number: can start with '+'
+# and then must contain only digits. But doesn't check if the number is real
 def input_error(func):
     def wrapper(*args):
-        # Handles only the correct number of arguments that are passed into the function
+        if len(args) != 2:
+            return func(*args)
+
+        name, phone = args
+        try:
+            phone_check = phone[1:] if phone[0] == '+' else phone
+            # check at once if the number is negative and if it is not a string
+            if int(phone_check) < 0:
+                raise ValueError
+        except ValueError:
+            print("ERROR: Phone can or couldn't start with '+' and then must contain only digits!")
+            print("Example: +380..., 380...")
+            return
+
+        result = func(name, phone)
+        return result
+
+    return wrapper
+
+
+# This decorator handles the correct number of arguments that are passed into the function
+def func_arg_error(func):
+    def wrapper(*args):
+
         try:
             func(*args)
         except TypeError:
@@ -19,12 +44,13 @@ def input_error(func):
     return wrapper
 
 
-@input_error
+@func_arg_error
 def hello() -> None:
     print("Hello! How can I help you?")
 
 
 @input_error
+@func_arg_error
 def add_phone(name: str, phone: str) -> None:
     if name in contacts.keys():
         print(f"Name '{name}' is already in contacts!")
@@ -36,6 +62,7 @@ def add_phone(name: str, phone: str) -> None:
 
 
 @input_error
+@func_arg_error
 def change_phone(name: str, phone: str):
     if name not in contacts.keys():
         print(f"There is no contact with name '{name}'")
@@ -45,7 +72,7 @@ def change_phone(name: str, phone: str):
     print(f'Contact was updated successfully!')
 
 
-@input_error
+@func_arg_error
 def show_phone(name: str) -> None:
     if name not in contacts.keys():
         print(f"There is no contact with name '{name}'")
@@ -54,7 +81,7 @@ def show_phone(name: str) -> None:
     print(contacts.get(name))
 
 
-@input_error
+@func_arg_error
 def show_all_phones() -> None:
     if not contacts:
         print("There are no contacts to show yet...")
