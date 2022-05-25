@@ -37,9 +37,11 @@ def func_arg_error(func):
             if f_name in ('hello', 'show_all_phones'):
                 print("ERROR: This command has to be written without arguments!")
             if f_name in ('add_phone', 'change_phone'):
-                print("ERROR: This command needs 2 arguments: 'name' and 'phone'!")
+                print("ERROR: This command needs 2 arguments: 'name' and 'phone'")
+                print("separated by 1 space!")
             if f_name == 'show_phone':
-                print("ERROR: This command needs 1 arguments: 'name'!")
+                print("ERROR: This command needs 1 arguments: 'name'")
+                print("separated by 1 space!")
 
     return wrapper
 
